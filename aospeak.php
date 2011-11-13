@@ -7,12 +7,14 @@
 Plugin Name: AO Speak
 Plugin URI: http://boltgun.the-kindred.info
 Description: Display the online list from the AO Speak server for Teamspeak.
-Author: Boltgun
+Author: Guillaume Olivetti
 Version: 0.1
-Author URI: http://boltgun.the-kindred.info
+Author URI: http://devduweb.com
 */
+
 // Configuration
 
+// Actions
 
 // Register the widget
 

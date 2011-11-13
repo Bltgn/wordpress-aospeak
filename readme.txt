@@ -1,6 +1,0 @@
-License
-Links
-
-Description
-
-Installation
