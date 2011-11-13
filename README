@@ -1,6 +1,64 @@
-License
-Links
+=== EPT Empty Plugin Template ===
+Contributors: Guillaume Olivetti
+Tags: wordpress plugin, plugin, development, anarchy online, teamspeak, webservice
+Requires at least: 3.2.1
+Tested up to: 3.2.1
+Stable tag: "1.0"
 
-Description
+Adds a widget to display the status of an AO Speak channel in Wordpress.
 
-Installation
+== Description ==
+
+Adds a widget.
+
+= Including: =
+* Stuff
+* More stuff
+
+== Installation ==
+
+ONLY USE THIS FOR LOCAL DEVELOPMENT
+1. Upload the plugin to the `/wp-content/plugins/` directory
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Add a widget to one of your template's sidebar is supported
+
+== Remove plugin ==
+
+1. Deactivate plugin through the 'Plugins' menu in WordPress
+2. Delete plugin through the 'Plugins' menu in WordPress
+
+It's best to use the build in delete function of wordpress. That way all the stored data will be removed and no orphaned data will stay.
+
+== Screenshots ==
+
+soon
+
+== Frequently Asked Questions ==
+
+= How can I support you? =
+
+Post a comment
+Contact me ingame
+Ask on the ao forum
+Mail
+
+= What is the plugin page?  =
+
+[AOSpeak for Wordpress](http://boltgun.the-kindred.info)
+
+= Do you have other plugins?  =
+
+Maybe
+
+= Where do I post my feedback? =
+
+Post it at the plugin page: [EPT Empty Plugin Template ](http://1manfactory.com/ept)
+
+== Changelog ==
+
+= 0.1 (DATE) =
+* first version
+
+== Upgrade Notice ==
+
+Just do a normal upgrade.
