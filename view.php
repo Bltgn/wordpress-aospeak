@@ -6,7 +6,8 @@
  */
 
 /**
- *
+ * Basic view class
+ * 
  * @todo Table() method
  */
 abstract class Ao_Speak_View {

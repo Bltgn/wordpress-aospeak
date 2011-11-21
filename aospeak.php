@@ -83,6 +83,8 @@ class Ao_Speak_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		extract($args);
+
+		// Filtering
 		$title = apply_filters( 'widget_title', $instance['title'] );
 
 		// Output
@@ -91,7 +93,9 @@ class Ao_Speak_Widget extends WP_Widget {
 			echo $before_title . $title . $after_title;
 		}
 		
-		// Request here
+		// Cache check
+		
+		// No cache => request
 		echo '<p>toto</p>';
 
 		echo $after_widget;
@@ -101,6 +105,8 @@ class Ao_Speak_Widget extends WP_Widget {
 	 * Updates the plugin's settings.
 	 * First validate the selected mode and associated settings.
 	 * Saves the appropriate settings.
+	 * @todo Error messages, not just silent rejects
+	 * @todo Cache check and direct display
 	 *
 	 * @param array $new_instance
 	 * @param array $old_instance
@@ -112,9 +118,24 @@ class Ao_Speak_Widget extends WP_Widget {
 		// Title
 		$instance['title'] = strip_tags($new_instance['title']);
 
-		// Mode validation
+		// Mode
+		if( empty( $new_instance['mode'] ) or FALSE === in_array( $new_instance['mode'], array( 1, 2 ) ) ) {
+			$instance['mode'] = 1;
+		} else {
+			$instance['mode'] = $new_instance['mode'];
+		}
+		
+		// Dimension
+		if( empty( $new_instance['dim'] ) or FALSE === in_array( $new_instance['dim'], array( 1, 2 ) ) ) {
+			$instance['dim'] = 1;
+		} else {
+			$instance['dim'] = $new_instance['dim'];
+		}
 
 		// For each mode select and validate the options
+		if($instance['mode'] === 2) {
+			$instance['org'] = ( empty( $new_instance['org'] ) ) ? 0 : (int) $new_instance['org'];
+		}
 
 		return $instance;
 	}
@@ -126,17 +147,42 @@ class Ao_Speak_Widget extends WP_Widget {
 	 * - Online settings
 	 * - Org settings.
 	 * Only the settings associated with the selected mode is displayed.
+	 * @todo Help tootip
 	 *
 	 * @param array $instance
 	 * @see WP_Widget::form
 	 */
 	public function form( $instance ) {
-		// Settings filtering
-		$title = ( $instance ) ? esc_attr( $instance[ 'title' ] ) : __( 'Who is online on AOSpeak', AO_SPEAK_I18N_DOMAIN);
+		// Init
+		$default = array(
+			'title' => __( 'Who is online on AOSpeak', AO_SPEAK_I18N_DOMAIN),
+			'mode' => 1, 
+			'dim' => 1, 
+			'org' => 0
+		);
+		$instance = wp_parse_args( (array) $instance, $default );
 		
 		// Title field
-		echo '<label for="' . $this->get_field_id('title') . '">' . __('Title:') . '</label>';
-		echo '<input class="widefat" id="' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') . '" type="text" value="' . $title . '">';
+		echo '<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Title:', AO_SPEAK_I18N_DOMAIN ) . '</label>
+			<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name('title') . '" type="text" value="' . $instance['title'] . '">';
+		
+		// Mode select
+		echo '<label for="' . $this->get_field_id( 'mode' ).'">'.__( 'Mode:', AO_SPEAK_I18N_DOMAIN ) . '</label>
+			<select id="' . $this->get_field_id( 'mode' ).'" name="'.$this->get_field_name( 'mode' ) . '" class="widefat" style="width:100%;">
+				<option', ( '1' == $instance['mode'] ) ? ' selected="selected"' : '', '>' . __( 'Online' ) . '</option>
+				<option', ( '2' == $instance['mode'] ) ? ' selected="selected"' : '', '>' . __( 'Organization' ) . '</option>
+			</select>';
+		
+		// Dimension select
+		echo '<label for="' . $this->get_field_id( 'dim' ).'">'.__( 'Dimension:', AO_SPEAK_I18N_DOMAIN ).'</label>
+			<select id="' . $this->get_field_id( 'dim' ).'" name="'.$this->get_field_name( 'dim' ) . '" class="widefat" style="width:100%;">
+				<option', ( '1' == $instance['dim'] ) ? ' selected="selected"' : '', '>'. __( 'Atlantean', AO_SPEAK_I18N_DOMAIN ) . '</option>
+				<option', ( '2' == $instance['dim'] ) ? ' selected="selected"' : '', '>' . __( 'Rimor', AO_SPEAK_I18N_DOMAIN ) . '</option>
+			</select>';
+		
+		// Org id
+		echo '<label for="' . $this->get_field_id( 'org' ) . '">' . __( 'Org ID:', AO_SPEAK_I18N_DOMAIN ) . '</label>
+			<input class="widefat" id="' . $this->get_field_id( 'org' ) . '" name="' . $this->get_field_name( 'org' ) . '" type="text" value="' . $instance['org'] . '">';
 	}
 
 }

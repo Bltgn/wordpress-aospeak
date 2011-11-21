@@ -60,7 +60,8 @@ Post it at the plugin page: [EPT Empty Plugin Template ](http://1manfactory.com/
 == Changelog ==
 
 = 0.1 (DATE) =
-* first version
+* Request handler to AO Speak
+* Widget setup with Mode, Dimension and Org ID
 
 == Upgrade Notice ==
 
