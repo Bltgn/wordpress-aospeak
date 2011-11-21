@@ -203,6 +203,7 @@ function getGetInt( $value ) {
 $mode = getGetInt( 'mode' );
 $dimension = getGetInt( 'dim' );
 $org = getGetInt( 'org' );
+$data = array();
 
 $request = new Ao_Speak_Request( $mode, $dimension, array( 'org' => $org ) );
 
@@ -214,10 +215,13 @@ try {
 	} else {
 		$view = new Ao_Speak_View_Organisation( array( 'egResult' => $result ) );
 	}
-	echo $view;
+	$data['html'] = (string) $view;
 
 } catch( Ao_Speak_Exception $e ) {
 	user_error( $e->getMessage(), E_USER_WARNING );
 	// Displays a default empty message to the user
 
 }
+
+// Output the result
+echo json_encode($data);
