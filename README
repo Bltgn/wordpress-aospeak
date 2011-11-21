@@ -9,7 +9,10 @@ Adds a widget to display the status of an AO Speak channel in Wordpress.
 
 == Description ==
 
-Adds a widget.
+WARNING
+This is an alpha plugin, not ready for production use. Use with caution.
+
+This is a first draft, it will be completed as features are developped.
 
 = Including: =
 * Stuff
@@ -20,7 +23,6 @@ Adds a widget.
 Requirement
 PHP 5.2.12 with CURL
 
-ONLY USE THIS FOR LOCAL DEVELOPMENT
 1. Upload the plugin to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Add a widget to one of your template's sidebar is supported
@@ -34,7 +36,7 @@ It's best to use the build in delete function of wordpress. That way all the sto
 
 == Screenshots ==
 
-soon
+TBA
 
 == Frequently Asked Questions ==
 
@@ -51,11 +53,11 @@ Mail
 
 = Do you have other plugins?  =
 
-Maybe
+TBA
 
 = Where do I post my feedback? =
 
-Post it at the plugin page: [EPT Empty Plugin Template ](http://1manfactory.com/ept)
+TBA
 
 == Changelog ==
 
@@ -66,4 +68,4 @@ Post it at the plugin page: [EPT Empty Plugin Template ](http://1manfactory.com/
 
 == Upgrade Notice ==
 
-Just do a normal upgrade.
+N/A
