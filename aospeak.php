@@ -120,7 +120,6 @@ class Ao_Speak_Widget extends WP_Widget {
 	 * @see WP_Widget::update
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
 
 		// Title
 		$instance['title'] = strip_tags($new_instance['title']);
@@ -129,14 +128,14 @@ class Ao_Speak_Widget extends WP_Widget {
 		if( empty( $new_instance['mode'] ) or FALSE === in_array( $new_instance['mode'], array( 1, 2 ) ) ) {
 			$instance['mode'] = 1;
 		} else {
-			$instance['mode'] = $new_instance['mode'];
+			$instance['mode'] = (int) $new_instance['mode'];
 		}
 		
 		// Dimension
 		if( empty( $new_instance['dim'] ) or FALSE === in_array( $new_instance['dim'], array( 1, 2 ) ) ) {
 			$instance['dim'] = 1;
 		} else {
-			$instance['dim'] = $new_instance['dim'];
+			$instance['dim'] = (int) $new_instance['dim'];
 		}
 
 		// For each mode select and validate the options
@@ -176,15 +175,16 @@ class Ao_Speak_Widget extends WP_Widget {
 		// Mode select
 		echo '<label for="' . $this->get_field_id( 'mode' ).'">'.__( 'Mode:', AO_SPEAK_I18N_DOMAIN ) . '</label>
 			<select id="' . $this->get_field_id( 'mode' ).'" name="'.$this->get_field_name( 'mode' ) . '" class="widefat" style="width:100%;">
-				<option', ( '1' == $instance['mode'] ) ? ' selected="selected"' : '', '>' . __( 'Online' ) . '</option>
-				<option', ( '2' == $instance['mode'] ) ? ' selected="selected"' : '', '>' . __( 'Organization' ) . '</option>
+				<option value="1" ', ( '1' == $instance['mode'] ) ? 'selected="selected"' : '', '>' . __( 'Online', AO_SPEAK_I18N_DOMAIN  ) . '</option>
+				<option value="2" ', ( '2' == $instance['mode'] ) ? 'selected="selected"' : '', '>' . __( 'Organization', AO_SPEAK_I18N_DOMAIN  ) . '</option>
 			</select>';
 		
 		// Dimension select
 		echo '<label for="' . $this->get_field_id( 'dim' ).'">'.__( 'Dimension:', AO_SPEAK_I18N_DOMAIN ).'</label>
 			<select id="' . $this->get_field_id( 'dim' ).'" name="'.$this->get_field_name( 'dim' ) . '" class="widefat" style="width:100%;">
-				<option', ( '1' == $instance['dim'] ) ? ' selected="selected"' : '', '>'. __( 'Atlantean', AO_SPEAK_I18N_DOMAIN ) . '</option>
-				<option', ( '2' == $instance['dim'] ) ? ' selected="selected"' : '', '>' . __( 'Rimor', AO_SPEAK_I18N_DOMAIN ) . '</option>
+				<option  value="0" ', ( '0' == $instance['dim'] ) ? 'selected="selected"' : '', '>'. __( 'Any', AO_SPEAK_I18N_DOMAIN ) . '</option>
+				<option  value="1" ', ( '1' == $instance['dim'] ) ? 'selected="selected"' : '', '>'. __( 'Atlantean', AO_SPEAK_I18N_DOMAIN ) . '</option>
+				<option  value="2" ', ( '2' == $instance['dim'] ) ? 'selected="selected"' : '', '>' . __( 'Rimor', AO_SPEAK_I18N_DOMAIN ) . '</option>
 			</select>';
 		
 		// Org id
