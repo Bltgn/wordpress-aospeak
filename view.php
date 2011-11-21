@@ -1,6 +1,9 @@
 <?php
 /**
  * Contains the view class for the widget's display.
+ * @todo support for idle time, converted in time
+ * @todo support for a optional fields
+ * @todo externalize the table and header for translation
  *
  * @package AOSpeak
  */
@@ -77,7 +80,6 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 					<th>Name</th>
 					<th>Country</th>
 					<th>Ingame</th>
-					<th>Idle time</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -89,7 +91,6 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 				<td>' . $this->output( $eResult['name'] ) . '</td>
 				<td>' . $this->output( $eResult['country'] ) . '</td>
 				<td>' . $ingame . '</td>
-				<td>' . $this->output( $eResult['idleTime']) . '</td>
 			</tr>';
 		}
 
@@ -132,7 +133,6 @@ class Ao_Speak_View_Online extends Ao_Speak_View {
 					<th>Country</th>
 					<th>Ingame</th>
 					<th>Channel</th>
-					<th>Idle time</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -145,7 +145,6 @@ class Ao_Speak_View_Online extends Ao_Speak_View {
 				<td>' . $this->output( $eResult['country'] ) . '</td>
 				<td>' . $ingame . '</td>
 				<td>' . $this->output( $eResult['channelName'] ) . '</td>
-				<td>' . $this->output( $eResult['idleTime']) . '</td>
 			</tr>';
 		}
 
