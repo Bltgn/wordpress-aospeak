@@ -12,9 +12,9 @@
  */
 abstract class Ao_Speak_View {
 
-	public $data = array();
+	public $data;
 
-	public function __construct( array $data ) {
+	public function __construct( array $data = array() ) {
 		$this->data = $data;
 	}
 
@@ -156,4 +156,43 @@ class Ao_Speak_View_Online extends Ao_Speak_View {
 		return $html;
 	}
 
+}
+
+/**
+ * View displaying an empty space ready to receive the request data
+ * @todo transfer the table and headers there so they can be translated
+ * 
+ */
+class Ao_Speak_View_Request extends Ao_Speak_View {
+	
+	/**
+	 * @todo Some actual checks against weird limit cases
+	 */
+	protected function dataCheck() {
+	}
+	
+	/**
+	 * Output
+	 * 
+	 * @return string 
+	 */
+	public function __toString() {
+		
+		extract( $this->data['instance'] );
+		
+		// Empty table
+		$html = '<div class="aospeak"></div>';
+		
+		
+		// Javascript call
+		$jsParams = '"' . $this->data['widget_id'] . '", ' . $this->data['instance']['mode'] . ', ' . $this->data['instance']['dim'] . ', ';
+		$jsParams .= ( FALSE === empty( $this->data['instance']['org'] ) ) ? $this->data['instance']['org'] : 0;
+		
+		$html .= '<script type="text/javascript">
+			jQuery( aospeak_request(' . $jsParams . ') );
+		</script>';	
+		
+		return $html;
+	}
+	
 }

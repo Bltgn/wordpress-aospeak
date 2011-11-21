@@ -30,6 +30,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
+// Includes
+require_once dirname(__FILE__).'/view.php';
+
 /*
  * Configuration
  */
@@ -49,6 +52,7 @@ define('AO_SPEAK_VERSION', '0.1');
  */
 // Widget registration
 add_action( 'widgets_init', create_function( '', 'register_widget("Ao_Speak_Widget");' ) );
+add_action( 'wp_enqueue_scripts', 'aospeak_enqueue_javascript' );
 
 /**
  * The widget, extends WP Widget management.
@@ -96,7 +100,10 @@ class Ao_Speak_Widget extends WP_Widget {
 		// Cache check
 		
 		// No cache => request
-		echo '<p>toto</p>';
+		$view = new Ao_Speak_View_Request;
+		$view->setData( 'instance', $instance )
+			->setData( 'widget_id', $args['widget_id'] );
+		echo $view;
 
 		echo $after_widget;
 	}
@@ -186,3 +193,13 @@ class Ao_Speak_Widget extends WP_Widget {
 	}
 
 }
+
+/**
+ * Adds the script to the WP installation, in the footer
+ */
+function aospeak_enqueue_javascript() {
+	wp_enqueue_script( 'jquery' );
+    wp_enqueue_script( 'aospeak', plugins_url( 'aospeak.js' , __FILE__ ) );
+	// Add the url to the request handler
+	wp_localize_script( 'aospeak', 'aospeak_setup', array( 'url' => plugins_url( 'request.php' , __FILE__ ) ) );
+}   
