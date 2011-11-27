@@ -46,6 +46,8 @@ define('AO_SPEAK_CACHE_TIMEOUT', 5);
 define('AO_SPEAK_I18N_DOMAIN', 'aospeak_plugin');
 // Version string
 define('AO_SPEAK_VERSION', '0.1');
+// Add the JS to the footer instead of header (recommended)s
+define('AO_SPEAK_JS_FOOTER', TRUE);
 
 /*
  * Actions
@@ -195,11 +197,17 @@ class Ao_Speak_Widget extends WP_Widget {
 }
 
 /**
- * Adds the script to the WP installation, in the footer
+ * Adds the script to the WP installation
  */
 function aospeak_enqueue_javascript() {
 	wp_enqueue_script( 'jquery' );
-    wp_enqueue_script( 'aospeak', plugins_url( 'aospeak.js' , __FILE__ ) );
+    wp_enqueue_script(
+			'aospeak',
+			plugins_url( 'aospeak.js' , __FILE__ ),
+			array( 'jquery' ),
+			AO_SPEAK_VERSION,
+			AO_SPEAK_JS_FOOTER
+		);
 	// Add the url to the request handler
 	wp_localize_script( 'aospeak', 'aospeak_setup', array( 'url' => plugins_url( 'request.php' , __FILE__ ) ) );
 }   
