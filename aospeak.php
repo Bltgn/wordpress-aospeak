@@ -46,8 +46,8 @@ define('AO_SPEAK_CACHE_TIMEOUT', 5);
 define('AO_SPEAK_I18N_DOMAIN', 'aospeak_plugin');
 // Version string
 define('AO_SPEAK_VERSION', '0.1');
-// Add the JS to the footer instead of header (recommended)s
-define('AO_SPEAK_JS_FOOTER', TRUE);
+// Add the JS to the footer instead of header
+define('AO_SPEAK_JS_FOOTER', FALSE);
 
 /*
  * Actions
