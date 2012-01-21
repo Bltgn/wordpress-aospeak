@@ -11,7 +11,6 @@
 /**
  * Basic view class
  * 
- * @todo Table() method
  */
 abstract class Ao_Speak_View {
 
@@ -72,6 +71,7 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 	 */
 	public function __toString() {
 		$this->dataCheck();
+		$even = FALSE;
 
 		// Header
 		$html = '<table class="ao-speak organization">
@@ -86,12 +86,15 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 
 		foreach( $this->data['egResult'] as $eResult) {
 			$ingame = ($eResult['ingame']) ? 'Yes' : 'No';
+			$attributes = $even ? ' class="even"' : ' class="odd"';
 
-			$html .= '<tr>
+			$html .= '<tr'.$attributes.'>
 				<td>' . $this->output( $eResult['name'] ) . '</td>
 				<td>' . $this->output( $eResult['country'] ) . '</td>
 				<td>' . $ingame . '</td>
 			</tr>';
+			
+			$even = ($even === FALSE);
 		}
 
 		// Closing
@@ -124,6 +127,7 @@ class Ao_Speak_View_Online extends Ao_Speak_View {
 	 */
 	public function __toString() {
 		$this->dataCheck();
+		$even = FALSE;
 
 		// Header
 		$html = '<table class="ao-speak online">
@@ -139,6 +143,7 @@ class Ao_Speak_View_Online extends Ao_Speak_View {
 
 		foreach( $this->data['egResult'] as $eResult) {
 			$ingame = ($eResult['ingame']) ? 'Yes' : 'No';
+			$attributes = $even ? ' class="even"' : ' class="odd"';
 
 			$html .= '<tr>
 				<td>' . $this->output( $eResult['name'] ) . '</td>
@@ -146,6 +151,8 @@ class Ao_Speak_View_Online extends Ao_Speak_View {
 				<td>' . $ingame . '</td>
 				<td>' . $this->output( $eResult['channelName'] ) . '</td>
 			</tr>';
+			
+			$even = ($even === FALSE);
 		}
 
 		// Closing
