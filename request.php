@@ -172,8 +172,8 @@ class Ao_Speak_Request {
 class Ao_Speak_Exception extends Exception {
 	// Setup problems
 	const CODE_MODE_INVALID = 10;
-	const CODE_DIMENSION_INVALID = 10;
-	const CODE_ORGANISATION_INVALID = 10;
+	const CODE_DIMENSION_INVALID = 20;
+	const CODE_ORGANISATION_INVALID = 30;
 
 	// AO Speak errors
 
