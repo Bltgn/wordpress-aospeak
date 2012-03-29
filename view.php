@@ -14,8 +14,16 @@
  */
 abstract class Ao_Speak_View {
 
-	public $data;
+	/**
+	 * @var array Will contain the variables to display.
+	 */
+	public $data = array();
 
+	/**
+	 * Allow a direct data addition during class creation.
+	 * 
+	 * @param array $data 
+	 */
 	public function __construct( array $data = array() ) {
 		$this->data = $data;
 	}
@@ -46,6 +54,61 @@ abstract class Ao_Speak_View {
 	public function setData( $key, $value ) {
 		$this->data[$key] = $value;
 		return $this;
+	}
+	
+	/**
+	 * Returns the singular or plural form depending of the entered number.
+	 * @todo russian support (11, 21, etc uses singular)
+	 * 
+	 * @param string $singular The singuler version of the string.
+	 * @param string $plural The plural version of the string.
+	 * @param int $number The number defining what we need
+	 */
+	public function plural($singular, $plural, $number) {
+		return ($number === 1) ? $singular : $plural;
+	}
+	
+	/**
+	 * Convert the idle time to a understandable string.
+	 * Will add "X day(s), X hours..."
+	 * Ommit fields equals to 0.
+	 * Doesn't add more then 3 fields.
+	 *  
+	 * @param int $timeSecond The number of seconds sent by the AO Speak API
+	 * @return string
+	 */
+	protected function idleTime( $timeSecond ) {
+		
+		$timeField = array();
+		
+		// Days
+		$cTime = (int)floor($timeSecond / 86400);
+		if( $cTime > 0 ) {
+			$timeField[] = $cTime . ' ' . $this->plural( 'day', 'days', $cTime );
+			$timeSecond -= $cTime * 86400;
+		}
+		
+		// Hours
+		$cTime = (int)floor($timeSecond / 3600);
+		if( $cTime > 0 ) {
+			$timeField[] = $cTime . ' ' . $this->plural( 'hour', 'hours', $cTime );
+			$timeSecond -= $cTime * 3600;
+		}
+		
+		// Minutes
+		$cTime = (int)floor($timeSecond / 60);
+		if( $cTime > 0 ) {
+			$timeField[] = $cTime . ' ' . $this->plural( 'minute', 'minutes', $cTime );
+			$timeSecond -= $cTime * 60;
+		}
+		
+		// Seconds
+		if( count($timeField) < 3 ) {
+			$timeField[] = $cTime . ' ' . $this->plural( 'second', 'seconds', $cTime );
+		}
+		
+		return implode( ' ', $timeField );
+		
 	}
 
 }
@@ -80,6 +143,7 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 					<th>Name</th>
 					<th>Country</th>
 					<th>Ingame</th>
+					<th>Idle time</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -92,6 +156,7 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 				<td>' . $this->output( $eResult['name'] ) . '</td>
 				<td>' . $this->output( $eResult['country'] ) . '</td>
 				<td>' . $ingame . '</td>
+				<td>' . $this->idleTime( $eResult['idleTime'] ) . '</td>
 			</tr>';
 			
 			$even = ($even === FALSE);

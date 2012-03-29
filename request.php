@@ -207,10 +207,12 @@ $data = array();
 
 $request = new Ao_Speak_Request( $mode, $dimension, array( 'org' => $org ) );
 
+// Sending the request itself
 try {
+	
 	$result = $request->request();
 
-	if($mode === Ao_Speak_Request::MODE_ONLINE) {
+	if( $mode === Ao_Speak_Request::MODE_ONLINE ) {
 		$view = new Ao_Speak_View_Online( array( 'egResult' => $result ) );
 	} else {
 		$view = new Ao_Speak_View_Organisation( array( 'egResult' => $result ) );
