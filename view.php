@@ -60,7 +60,7 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 	 * 
 	 */
 	protected function dataCheck() {
-		if( FALSE === isset($this->data['egResult']) ) {
+		if( FALSE === isset( $this->data['egResult'] ) ) {
 			$this->data['egResult'] = array();
 		}
 	}
@@ -84,7 +84,7 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 			</thead>
 			<tbody>';
 
-		foreach( $this->data['egResult'] as $eResult) {
+		foreach( $this->data['egResult'] as $eResult ) {
 			$ingame = ($eResult['ingame']) ? 'Yes' : 'No';
 			$attributes = $even ? ' class="even"' : ' class="odd"';
 
@@ -116,7 +116,7 @@ class Ao_Speak_View_Online extends Ao_Speak_View {
 	 *
 	 */
 	protected function dataCheck() {
-		if( FALSE === isset($this->data['egResult']) ) {
+		if( FALSE === isset( $this->data['egResult'] ) ) {
 			$this->data['egResult'] = array();
 		}
 	}
@@ -141,11 +141,11 @@ class Ao_Speak_View_Online extends Ao_Speak_View {
 			</thead>
 			<tbody>';
 
-		foreach( $this->data['egResult'] as $eResult) {
+		foreach( $this->data['egResult'] as $eResult ) {
 			$ingame = ($eResult['ingame']) ? 'Yes' : 'No';
 			$attributes = $even ? ' class="even"' : ' class="odd"';
 
-			$html .= '<tr>
+			$html .= '<tr'.$attributes.'>
 				<td>' . $this->output( $eResult['name'] ) . '</td>
 				<td>' . $this->output( $eResult['country'] ) . '</td>
 				<td>' . $ingame . '</td>
