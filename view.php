@@ -32,8 +32,8 @@ abstract class Ao_Speak_View {
 	 * @param mixed $output
 	 * @return string
 	 */
-	protected function output($output) {
-		return htmlentities($output, NULL, NULL, FALSE);
+	protected function output( $output ) {
+		return htmlentities( $output, NULL, NULL, FALSE );
 	}
 
 	/**
