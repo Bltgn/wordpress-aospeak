@@ -13,6 +13,12 @@
  * 
  */
 abstract class Ao_Speak_View {
+	
+	// The fields
+	const FIELD_NAME = 1;
+	const FIELD_COUNTRY = 2;
+	const FIELD_IDLE_TIME = 4;
+	const FIELD_INGAME = 8;
 
 	/**
 	 * @var array Will contain the variables to display.
@@ -58,7 +64,7 @@ abstract class Ao_Speak_View {
 	
 	/**
 	 * Returns the singular or plural form depending of the entered number.
-	 * @todo russian support (11, 21, etc uses singular)
+	 * @todo I18N - russian support (11, 21, etc uses singular)
 	 * 
 	 * @param string $singular The singuler version of the string.
 	 * @param string $plural The plural version of the string.
