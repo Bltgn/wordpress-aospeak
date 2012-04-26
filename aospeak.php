@@ -192,6 +192,18 @@ class Ao_Speak_Widget extends WP_Widget {
 		// Org id
 		echo '<label for="' . $this->get_field_id( 'org' ) . '">' . __( 'Org ID:', AO_SPEAK_I18N_DOMAIN ) . '</label>
 			<input class="widefat" id="' . $this->get_field_id( 'org' ) . '" name="' . $this->get_field_name( 'org' ) . '" type="text" value="' . $instance['org'] . '">';
+		
+		// Fields (ajouter checked)
+		echo '<h5>' . __('Fields to display') . '</h5>
+			<input type="checkbox" id="' . $this->get_field_id( 'fieldName' ) . '">
+			<label for="' . $this->get_field_id( 'fieldName' ) . '">' . __('Name') . '</label>
+			<input type="checkbox" id="' . $this->get_field_id( 'fieldName' ) . '">
+			<label for="' . $this->get_field_id( 'fieldCountry' ) . '">' . __('Country') . '</label>
+			<input type="checkbox" id="' . $this->get_field_id( 'fieldName' ) . '">
+			<label for="' . $this->get_field_id( 'fieldIngame' ) . '">' . __('Ingame') . '</label><br>
+			<input type="checkbox" id="' . $this->get_field_id( 'fieldName' ) . '">
+			<label for="' . $this->get_field_id( 'fieldIdle' ) . '">' . __('Idle Time') . '</label>';
+		
 	}
 
 }
