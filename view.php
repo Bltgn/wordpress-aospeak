@@ -1,9 +1,8 @@
 <?php
 /**
  * Contains the view class for the widget's display.
- * @todo support for idle time, converted in time
- * @todo support for a optional fields
  * @todo externalize the table and header for translation
+ * @todo Handling of empty results (no one online)
  *
  * @package AOSpeak
  */
@@ -24,9 +23,9 @@ class AO_Speak_View_Setup {
 	public static $fields = array(
 		'fieldName' => 'Name',
 		'fieldCountry' => 'Country',
-		'fieldIdleTime' => 'Ingame',
+		'fieldIngame' => 'Ingame',
 		'fieldChannelName' => 'Channel',
-		'fieldIdle' => 'Idle Time'
+		'fieldIdleTime' => 'Idle Time'
 	);
 	
 }
@@ -36,6 +35,10 @@ class AO_Speak_View_Setup {
  * 
  */
 abstract class Ao_Speak_View {
+	
+	// By default we show every fields
+	const DEFAULT_FIELDS = 32;
+	protected $class = '';
 
 	/**
 	 * @var array Will contain the variables to display.
@@ -55,7 +58,14 @@ abstract class Ao_Speak_View {
 	 * Takes appropriate actions if some values are not set.
 	 * 
 	 */
-	abstract protected function dataCheck();
+	protected function dataCheck() {
+		if( FALSE === isset( $this->data['egResult'] ) ) {
+			$this->data['egResult'] = array();
+		}
+		if( FALSE === isset( $this->data['fields'] ) ) {
+			$this->data['fields'] = self::DEFAULT_FIELDS;
+		}
+	}
 
 	/**
 	 * Filter the provided value.
@@ -87,8 +97,32 @@ abstract class Ao_Speak_View {
 	 * @param string $plural The plural version of the string.
 	 * @param int $number The number defining what we need
 	 */
-	public function plural($singular, $plural, $number) {
+	protected function plural($singular, $plural, $number) {
 		return ($number === 1) ? $singular : $plural;
+	}
+	
+	/**
+	 * Select the fields to display.
+	 * 
+	 * @return array
+	 * @see AO_Speak_View_Setup
+	 */
+	protected function fields() {
+		// init
+		$fields = array();
+		$counter = 0;
+		
+		// For each field, check if the correct bit is set
+		foreach( array_keys( AO_Speak_View_Setup::$fields ) as $fieldKey ) {
+			$test = $this->data['fields'] & pow( 2, $counter );
+			if( 0 !== $test ) {
+				$fieldName = lcfirst( substr( $fieldKey, 5 ) );
+				$fields[$fieldName] = AO_Speak_View_Setup::$fields[$fieldKey];
+			}
+			$counter++;
+		}
+		
+		return $fields;
 	}
 	
 	/**
@@ -105,84 +139,81 @@ abstract class Ao_Speak_View {
 		$timeField = array();
 		
 		// Days
-		$cTime = (int)floor($timeSecond / 86400);
+		$cTime = (int)floor( $timeSecond / 86400 );
 		if( $cTime > 0 ) {
 			$timeField[] = $cTime . ' ' . $this->plural( 'day', 'days', $cTime );
 			$timeSecond -= $cTime * 86400;
 		}
 		
 		// Hours
-		$cTime = (int)floor($timeSecond / 3600);
+		$cTime = (int)floor( $timeSecond / 3600 );
 		if( $cTime > 0 ) {
 			$timeField[] = $cTime . ' ' . $this->plural( 'hour', 'hours', $cTime );
 			$timeSecond -= $cTime * 3600;
 		}
 		
 		// Minutes
-		$cTime = (int)floor($timeSecond / 60);
+		$cTime = (int)floor( $timeSecond / 60 );
 		if( $cTime > 0 ) {
 			$timeField[] = $cTime . ' ' . $this->plural( 'minute', 'minutes', $cTime );
 			$timeSecond -= $cTime * 60;
 		}
 		
 		// Seconds
-		if( count($timeField) < 3 ) {
+		if( count( $timeField ) < 3 ) {
 			$timeField[] = $cTime . ' ' . $this->plural( 'second', 'seconds', $cTime );
 		}
 		
 		return implode( ' ', $timeField );
 		
 	}
-
-}
-
-/**
- * Displays a result table for the organisation
- */
-class Ao_Speak_View_Organisation extends Ao_Speak_View {
-
-	/**
-	 * Defaults the results to an empty array
-	 * 
-	 */
-	protected function dataCheck() {
-		if( FALSE === isset( $this->data['egResult'] ) ) {
-			$this->data['egResult'] = array();
-		}
-	}
-
+	
 	/**
 	 * Output
-	 * 
+	 *
+	 * @param array $fields
+	 * @return string HTML markup
 	 */
-	public function __toString() {
-		$this->dataCheck();
+	public function displayResult(array $fields) {
+		// init
 		$even = FALSE;
 
 		// Header
-		$html = '<table class="ao-speak organization">
+		$html = '<table class="ao-speak ' . $this->class . '">
 			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Country</th>
-					<th>Ingame</th>
-					<th>Idle time</th>
-				</tr>
+				<tr>';
+		
+		foreach($fields as $fieldLabel) {
+			$html .= '<th>' . $fieldLabel . '</th>';
+		}
+		
+		$html .= '</tr>
 			</thead>
 			<tbody>';
 
+		// Table body
 		foreach( $this->data['egResult'] as $eResult ) {
-			$ingame = ($eResult['ingame']) ? 'Yes' : 'No';
-			$attributes = $even ? ' class="even"' : ' class="odd"';
+			
+			// Filtering
+			if(isset($fields['ingame'])) {
+				$eResult['ingame'] = ($eResult['ingame']) ? 'Yes' : 'No';
+			}
+			if(isset($fields['idleTime'])) {
+				$eResult['idleTime'] = $this->idleTime( $eResult['idleTime'] );
+			}
+			
+			// Attributes
+			$attributes = $even ? 'class="even"' : 'class="odd"';
 
-			$html .= '<tr'.$attributes.'>
-				<td>' . $this->output( $eResult['name'] ) . '</td>
-				<td>' . $this->output( $eResult['country'] ) . '</td>
-				<td>' . $ingame . '</td>
-				<td>' . $this->idleTime( $eResult['idleTime'] ) . '</td>
-			</tr>';
+			// Line generation
+			$html .= '<tr '.$attributes.'>';
+			foreach( array_keys( $fields ) as $fieldKey ) {
+				$html .= '<td>' . $this->output( $eResult[$fieldKey] ) . '</td>';
+			}
+			$html .= '</tr>';
 			
 			$even = ($even === FALSE);
+			
 		}
 
 		// Closing
@@ -190,64 +221,45 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
 			</table>';
 
 		return $html;
+	}
+
+}
+
+/**
+ * Displays a result table for the organisation
+ * 
+ */
+class Ao_Speak_View_Organisation extends Ao_Speak_View {
+
+	/**
+	 * Output
+	 * 
+	 */
+	public function __toString() {
+		$this->dataCheck();
+		$fields = $this->fields();
+		unset($fields['channelName']); // no channel is returned in this mode
+
+		// Header
+		return $this->displayResult( $fields );
 	}
 
 }
 
 /**
  * Displays a result table for the online mode
+ * 
  */
 class Ao_Speak_View_Online extends Ao_Speak_View {
-
-	/**
-	 * Defaults the results to an empty array
-	 *
-	 */
-	protected function dataCheck() {
-		if( FALSE === isset( $this->data['egResult'] ) ) {
-			$this->data['egResult'] = array();
-		}
-	}
 
 	/**
 	 * Output
 	 *
 	 */
 	public function __toString() {
+		// init
 		$this->dataCheck();
-		$even = FALSE;
-
-		// Header
-		$html = '<table class="ao-speak online">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Country</th>
-					<th>Ingame</th>
-					<th>Channel</th>
-				</tr>
-			</thead>
-			<tbody>';
-
-		foreach( $this->data['egResult'] as $eResult ) {
-			$ingame = ($eResult['ingame']) ? 'Yes' : 'No';
-			$attributes = $even ? ' class="even"' : ' class="odd"';
-
-			$html .= '<tr'.$attributes.'>
-				<td>' . $this->output( $eResult['name'] ) . '</td>
-				<td>' . $this->output( $eResult['country'] ) . '</td>
-				<td>' . $ingame . '</td>
-				<td>' . $this->output( $eResult['channelName'] ) . '</td>
-			</tr>';
-			
-			$even = ($even === FALSE);
-		}
-
-		// Closing
-		$html .= '</tbody>
-			</table>';
-
-		return $html;
+		return $this->displayResult( $this->fields() );
 	}
 
 }
@@ -271,21 +283,30 @@ class Ao_Speak_View_Request extends Ao_Speak_View {
 	 * @return string 
 	 */
 	public function __toString() {
-		
-		extract( $this->data['instance'] );
-		
 		// Empty table
 		$html = '<div class="aospeak"></div>';
 		
-		// Fields to displau
-		
+		// Fields to display
+		$counter = $fields = 0;
+		foreach( array_keys( AO_Speak_View_Setup::$fields ) as $fieldKey ) {
+			if((bool)$this->data['instance'][$fieldKey]) {
+				$fields |= pow(2, $counter);
+			}
+			
+			$counter++;
+		}
 		
 		// Javascript call
-		$jsParams = '"' . $this->data['widget_id'] . '", ' . $this->data['instance']['mode'] . ', ' . $this->data['instance']['dim'] . ', ';
-		$jsParams .= ( FALSE === empty( $this->data['instance']['org'] ) ) ? $this->data['instance']['org'] : 0;
+		$jsParams = array(
+			'"' . $this->data['widget_id'] . '"',
+			$this->data['instance']['mode'],
+			$this->data['instance']['dim'],
+			$fields,
+			( FALSE === empty( $this->data['instance']['org'] ) ) ? $this->data['instance']['org'] : 0
+		);
 		
 		$html .= '<script type="text/javascript">
-			jQuery( aospeak_request(' . $jsParams . ') );
+			jQuery( aospeak_request(' . implode( ',', $jsParams ) . ') );
 		</script>';	
 		
 		return $html;

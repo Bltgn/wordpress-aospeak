@@ -11,7 +11,6 @@
  * - z : the org ID, unused in online mode
  *
  * @package AOSpeak
- * @todo Online mode, only org mode is supported to far
  */
 require_once dirname( __FILE__ ).'/view.php';
 
@@ -203,6 +202,7 @@ function getGetInt( $value ) {
 $mode = getGetInt( 'mode' );
 $dimension = getGetInt( 'dim' );
 $org = getGetInt( 'org' );
+$fields = getGetInt( 'fields' );
 $data = array();
 
 $request = new Ao_Speak_Request( $mode, $dimension, array( 'org' => $org ) );
@@ -213,9 +213,9 @@ try {
 	$result = $request->request();
 
 	if( $mode === Ao_Speak_Request::MODE_ONLINE ) {
-		$view = new Ao_Speak_View_Online( array( 'egResult' => $result ) );
+		$view = new Ao_Speak_View_Online( array( 'egResult' => $result, 'fields' => $fields ) );
 	} else {
-		$view = new Ao_Speak_View_Organisation( array( 'egResult' => $result ) );
+		$view = new Ao_Speak_View_Organisation( array( 'egResult' => $result, 'fields' => $fields ) );
 	}
 	$data['html'] = (string) $view;
 

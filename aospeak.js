@@ -1,9 +1,10 @@
-function aospeak_request( target, mode, dim, org ) {
+function aospeak_request( target, mode, dim, fields, org ) {
 	
 	// Request parameters
 	request = {
 		mode: mode,
 		dim: dim,
+		fields: fields,
 		org: org
 	};
 	
