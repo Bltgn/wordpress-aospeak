@@ -124,28 +124,28 @@ class Ao_Speak_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 
 		// Title
-		$instance['title'] = strip_tags($new_instance['title']);
+		$return_instance = array( 'title' => strip_tags( $new_instance['title'] ) );
 
-		// Mode
-		if( empty( $new_instance['mode'] ) or FALSE === in_array( $new_instance['mode'], array( 1, 2 ) ) ) {
-			$instance['mode'] = 1;
+		// Mode (default Online)
+		if( empty( $new_instance['mode'] ) or FALSE === in_array( (int)$new_instance['mode'], array( 1, 2 ) ) ) {
+			$return_instance['mode'] = 1;
 		} else {
-			$instance['mode'] = (int) $new_instance['mode'];
+			$return_instance['mode'] = (int)$new_instance['mode'];
 		}
 		
-		// Dimension
-		if( empty( $new_instance['dim'] ) or FALSE === in_array( $new_instance['dim'], array( 1, 2 ) ) ) {
-			$instance['dim'] = 1;
+		// Dimension (default Atlantean)
+		if( FALSE === isset( $new_instance['dim'] ) or FALSE === in_array( (int)$new_instance['dim'], array( 0, 1, 2 ) ) ) {
+			$return_instance['dim'] = 1;
 		} else {
-			$instance['dim'] = (int) $new_instance['dim'];
+			$return_instance['dim'] = (int)$new_instance['dim'];
 		}
 
 		// For each mode select and validate the options
-		if($instance['mode'] === 2) {
-			$instance['org'] = ( empty( $new_instance['org'] ) ) ? 0 : (int) $new_instance['org'];
+		if($return_instance['mode'] === 2) {
+			$return_instance['org'] = ( empty( $new_instance['org'] ) ) ? 0 : (int)$new_instance['org'];
 		}
 
-		return $instance;
+		return $return_instance;
 	}
 
 	/**
