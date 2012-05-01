@@ -1,4 +1,4 @@
-=== EPT Empty Plugin Template ===
+=== AO SPeak for Wordpress ===
 Contributors: Guillaume Olivetti
 Tags: wordpress plugin, plugin, development, anarchy online, teamspeak, webservice
 Requires at least: 3.2.1
@@ -15,24 +15,24 @@ This is an alpha plugin, not ready for production use. Use with caution.
 This is a first draft, it will be completed as features are developped.
 
 = Including: =
-* Stuff
-* More stuff
+* Display a list of players using AO Speak
+* Can display a list by server or organisation
 
 == Installation ==
 
-Requirement
-PHP 5.2.12 with CURL
+Requirements
+* PHP 5.2.12 with CURL
 
 1. Upload the plugin to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Add a widget to one of your template's sidebar is supported
+3. Add a widget to one of your template's sidebar
 
 == Remove plugin ==
 
 1. Deactivate plugin through the 'Plugins' menu in WordPress
 2. Delete plugin through the 'Plugins' menu in WordPress
 
-It's best to use the build in delete function of wordpress. That way all the stored data will be removed and no orphaned data will stay.
+It is best to use the build in delete function of wordpress. That way all the stored data will be removed and no orphaned data will stay.
 
 == Screenshots ==
 
@@ -61,10 +61,15 @@ TBA
 
 == Changelog ==
 
-= 0.1 (DATE) =
+= 0.1 (2011-11-23) =
 * Request handler to AO Speak
 * Widget setup with Mode, Dimension and Org ID
 * JSON request
+
+= 0.2 (date) =
+* Fields can be selected or hidden
+* Support for idle time
+* Additional classes for easier styling
 
 == Upgrade Notice ==
 
