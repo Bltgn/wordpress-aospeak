@@ -164,7 +164,7 @@ abstract class Ao_Speak_View {
 			$timeField[] = $cTime . ' ' . $this->plural( 'second', 'seconds', $cTime );
 		}
 		
-		return implode( ' ', $timeField );
+		return implode( ' ', array_slice( $timeField, 0, 2 ) );
 		
 	}
 	
