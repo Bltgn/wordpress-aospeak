@@ -9,16 +9,33 @@
  */
 
 /**
+ * Common values for the widget and the views
+ *  
+ */
+class AO_Speak_View_Setup {
+	
+	/**
+	 * The fields returned by the AO Speak API.
+	 * - The keys are the fields names as returned by the API.
+	 * - The values will be displayed through the __ and _e functions.
+	 * 
+	 * @var array Fields returned by AO Speak : ['fieldname' => 'Label']
+	 */
+	public static $fields = array(
+		'fieldName' => 'Name',
+		'fieldCountry' => 'Country',
+		'fieldIdleTime' => 'Ingame',
+		'fieldChannelName' => 'Channel',
+		'fieldIdle' => 'Idle Time'
+	);
+	
+}
+
+/**
  * Basic view class
  * 
  */
 abstract class Ao_Speak_View {
-	
-	// The fields
-	const FIELD_NAME = 1;
-	const FIELD_COUNTRY = 2;
-	const FIELD_IDLE_TIME = 4;
-	const FIELD_INGAME = 8;
 
 	/**
 	 * @var array Will contain the variables to display.
@@ -259,6 +276,8 @@ class Ao_Speak_View_Request extends Ao_Speak_View {
 		
 		// Empty table
 		$html = '<div class="aospeak"></div>';
+		
+		// Fields to displau
 		
 		
 		// Javascript call

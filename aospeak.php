@@ -61,23 +61,9 @@ add_action( 'wp_enqueue_scripts', 'aospeak_enqueue_javascript' );
  * Will either display a cached result or create a javascript request.
  *
  * @see Ao_Speak_View
+ * @see AO_Speak_View_Setup
  */
 class Ao_Speak_Widget extends WP_Widget {
-	
-	/**
-	 * The fields returned by the AO Speak API.
-	 * - The keys are the fields names as returned by the API.
-	 * - The values will be displayed through the __ and _e functions.
-	 * 
-	 * @var array Fields returned by AO Speak : ['name' => 'Label']
-	 */
-	protected $fields = array(
-		'name' => 'Name',
-		'country' => 'Country',
-		'idleTime' => 'Ingame',
-		'channelName' => 'Channel',
-		'idle' => 'Idle Time'
-	);
 
 	/**
 	 * Widget setup
@@ -156,8 +142,7 @@ class Ao_Speak_Widget extends WP_Widget {
 		}
 		
 		// Fields to display
-		foreach( array_keys( $this->fields ) as $fieldKey )  {
-			$fieldKey = 'field' . ucfirst($fieldKey);
+		foreach( array_keys( AO_Speak_View_Setup::$fields ) as $fieldKey )  {
 			$return_instance[$fieldKey] = ( isset( $new_instance[$fieldKey] ) and $new_instance[$fieldKey] === 'on' );
 		}
 
@@ -178,7 +163,7 @@ class Ao_Speak_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		// Init
-		$default = $default = array(
+		$default = array(
 			'title' => __( 'Who is online on AOSpeak', AO_SPEAK_I18N_DOMAIN ),
 			'mode' => 1, 
 			'dim' => 1, 
@@ -216,8 +201,7 @@ class Ao_Speak_Widget extends WP_Widget {
 		
 		// Fields
 		echo '<h5>' . __('Fields to display') . '</h5>';
-		foreach( $this->fields as $fieldKey => $fieldName ) {
-			$fieldKey = 'field' . ucfirst($fieldKey);
+		foreach( AO_Speak_View_Setup::$fields as $fieldKey => $fieldName ) {
 			$checked = $instance[$fieldKey] ? 'checked' : '';
 			
 			echo '<input type="checkbox" id="' . $this->get_field_id( $fieldKey ) . '" name="' . $this->get_field_name( $fieldKey ) . '" ' . $checked . '>
