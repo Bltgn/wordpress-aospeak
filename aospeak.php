@@ -63,6 +63,21 @@ add_action( 'wp_enqueue_scripts', 'aospeak_enqueue_javascript' );
  * @see Ao_Speak_View
  */
 class Ao_Speak_Widget extends WP_Widget {
+	
+	/**
+	 * The fields returned by the AO Speak API.
+	 * - The keys are the fields names as returned by the API.
+	 * - The values will be displayed through the __ and _e functions.
+	 * 
+	 * @var array Fields returned by AO Speak : ['name' => 'Label']
+	 */
+	protected $fields = array(
+		'name' => 'Name',
+		'country' => 'Country',
+		'idleTime' => 'Ingame',
+		'channelName' => 'Channel',
+		'idle' => 'Idle Time'
+	);
 
 	/**
 	 * Widget setup
@@ -122,27 +137,28 @@ class Ao_Speak_Widget extends WP_Widget {
 	 * @see WP_Widget::update
 	 */
 	public function update( $new_instance, $old_instance ) {
+		
+		// Init
+		$return_instance = array();
 
 		// Title
-		$return_instance = array( 'title' => strip_tags( $new_instance['title'] ) );
+		$return_instance['title'] = empty( $new_instance['title'] ) ? '' : strip_tags( $new_instance['title'] );
 
-		// Mode (default Online)
-		if( empty( $new_instance['mode'] ) or FALSE === in_array( (int)$new_instance['mode'], array( 1, 2 ) ) ) {
-			$return_instance['mode'] = 1;
-		} else {
-			$return_instance['mode'] = (int)$new_instance['mode'];
-		}
+		// Mode
+		$return_instance['mode'] = in_array( (int) $new_instance['mode'], array( 1, 2 ) ) ? (int)$new_instance['mode'] : 1;
 		
-		// Dimension (default Atlantean)
-		if( FALSE === isset( $new_instance['dim'] ) or FALSE === in_array( (int)$new_instance['dim'], array( 0, 1, 2 ) ) ) {
-			$return_instance['dim'] = 1;
-		} else {
-			$return_instance['dim'] = (int)$new_instance['dim'];
-		}
+		// Dimension
+		$return_instance['dim'] = in_array( (int) $new_instance['dim'], array( 0, 1, 2 ) ) ? (int)$new_instance['dim'] : 1;
 
 		// For each mode select and validate the options
-		if($return_instance['mode'] === 2) {
-			$return_instance['org'] = ( empty( $new_instance['org'] ) ) ? 0 : (int)$new_instance['org'];
+		if( $return_instance['mode'] === 2 ) {
+			$return_instance['org'] = (int) $new_instance['org'];
+		}
+		
+		// Fields to display
+		foreach( array_keys( $this->fields ) as $fieldKey )  {
+			$fieldKey = 'field' . ucfirst($fieldKey);
+			$return_instance[$fieldKey] = ( isset( $new_instance[$fieldKey] ) and $new_instance[$fieldKey] === 'on' );
 		}
 
 		return $return_instance;
@@ -162,11 +178,16 @@ class Ao_Speak_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		// Init
-		$default = array(
-			'title' => __( 'Who is online on AOSpeak', AO_SPEAK_I18N_DOMAIN),
+		$default = $default = array(
+			'title' => __( 'Who is online on AOSpeak', AO_SPEAK_I18N_DOMAIN ),
 			'mode' => 1, 
 			'dim' => 1, 
-			'org' => 0
+			'org' => 0,
+			'fieldName' => TRUE,
+			'fieldCountry' => TRUE,
+			'fieldIdleTime' => TRUE,
+			'fieldChannelName' => TRUE,
+			'fieldIdle' => TRUE
 		);
 		$instance = wp_parse_args( (array) $instance, $default );
 		
@@ -176,14 +197,14 @@ class Ao_Speak_Widget extends WP_Widget {
 		
 		// Mode select
 		echo '<label for="' . $this->get_field_id( 'mode' ).'">'.__( 'Mode:', AO_SPEAK_I18N_DOMAIN ) . '</label>
-			<select id="' . $this->get_field_id( 'mode' ).'" name="'.$this->get_field_name( 'mode' ) . '" class="widefat" style="width:100%;">
+			<select id="' . $this->get_field_id( 'mode' ).'" name="' . $this->get_field_name( 'mode' ) . '" class="widefat" style="width:100%;">
 				<option value="1" ', ( '1' == $instance['mode'] ) ? 'selected="selected"' : '', '>' . __( 'Online', AO_SPEAK_I18N_DOMAIN  ) . '</option>
 				<option value="2" ', ( '2' == $instance['mode'] ) ? 'selected="selected"' : '', '>' . __( 'Organization', AO_SPEAK_I18N_DOMAIN  ) . '</option>
 			</select>';
 		
 		// Dimension select
 		echo '<label for="' . $this->get_field_id( 'dim' ).'">'.__( 'Dimension:', AO_SPEAK_I18N_DOMAIN ).'</label>
-			<select id="' . $this->get_field_id( 'dim' ).'" name="'.$this->get_field_name( 'dim' ) . '" class="widefat" style="width:100%;">
+			<select id="' . $this->get_field_id( 'dim' ).'" name="' . $this->get_field_name( 'dim' ) . '" class="widefat" style="width:100%;">
 				<option  value="0" ', ( '0' == $instance['dim'] ) ? 'selected="selected"' : '', '>'. __( 'Any', AO_SPEAK_I18N_DOMAIN ) . '</option>
 				<option  value="1" ', ( '1' == $instance['dim'] ) ? 'selected="selected"' : '', '>'. __( 'Atlantean', AO_SPEAK_I18N_DOMAIN ) . '</option>
 				<option  value="2" ', ( '2' == $instance['dim'] ) ? 'selected="selected"' : '', '>' . __( 'Rimor', AO_SPEAK_I18N_DOMAIN ) . '</option>
@@ -193,16 +214,15 @@ class Ao_Speak_Widget extends WP_Widget {
 		echo '<label for="' . $this->get_field_id( 'org' ) . '">' . __( 'Org ID:', AO_SPEAK_I18N_DOMAIN ) . '</label>
 			<input class="widefat" id="' . $this->get_field_id( 'org' ) . '" name="' . $this->get_field_name( 'org' ) . '" type="text" value="' . $instance['org'] . '">';
 		
-		// Fields (ajouter checked)
-		echo '<h5>' . __('Fields to display') . '</h5>
-			<input type="checkbox" id="' . $this->get_field_id( 'fieldName' ) . '">
-			<label for="' . $this->get_field_id( 'fieldName' ) . '">' . __('Name') . '</label>
-			<input type="checkbox" id="' . $this->get_field_id( 'fieldName' ) . '">
-			<label for="' . $this->get_field_id( 'fieldCountry' ) . '">' . __('Country') . '</label>
-			<input type="checkbox" id="' . $this->get_field_id( 'fieldName' ) . '">
-			<label for="' . $this->get_field_id( 'fieldIngame' ) . '">' . __('Ingame') . '</label><br>
-			<input type="checkbox" id="' . $this->get_field_id( 'fieldName' ) . '">
-			<label for="' . $this->get_field_id( 'fieldIdle' ) . '">' . __('Idle Time') . '</label>';
+		// Fields
+		echo '<h5>' . __('Fields to display') . '</h5>';
+		foreach( $this->fields as $fieldKey => $fieldName ) {
+			$fieldKey = 'field' . ucfirst($fieldKey);
+			$checked = $instance[$fieldKey] ? 'checked' : '';
+			
+			echo '<input type="checkbox" id="' . $this->get_field_id( $fieldKey ) . '" name="' . $this->get_field_name( $fieldKey ) . '" ' . $checked . '>
+				<label for="' . $this->get_field_id( $fieldKey ) . '">' . __($fieldName) . '</label><br>';
+		}
 		
 	}
 
