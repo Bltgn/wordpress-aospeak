@@ -179,7 +179,7 @@ abstract class Ao_Speak_View {
 		$even = FALSE;
 
 		// Header
-		$html = '<table class="ao-speak ' . $this->class . '">
+		$html = '<table class="aospeak ' . $this->class . '">
 			<thead>
 				<tr>';
 		
@@ -230,6 +230,8 @@ abstract class Ao_Speak_View {
  * 
  */
 class Ao_Speak_View_Organisation extends Ao_Speak_View {
+	
+	protected $class = 'aospeak-org';
 
 	/**
 	 * Output
@@ -251,6 +253,8 @@ class Ao_Speak_View_Organisation extends Ao_Speak_View {
  * 
  */
 class Ao_Speak_View_Online extends Ao_Speak_View {
+	
+	protected $class = 'aospeak-online';
 
 	/**
 	 * Output
