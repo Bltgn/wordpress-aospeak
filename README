@@ -66,7 +66,7 @@ TBA
 * Widget setup with Mode, Dimension and Org ID
 * JSON request
 
-= 0.2 (date) =
+= 0.2 (2012-09-29) =
 * Fields can be selected or hidden
 * Support for idle time
 * Additional classes for easier styling
